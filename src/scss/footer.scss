@@ -1,0 +1,50 @@
+.footer {
+	// .footer__container
+	&__container {
+		@include adaptiveValue('padding-top', 80, 15);
+		@include adaptiveValue('padding-bottom', 80, 15);
+	}
+	// .footer__body
+	&__body {
+		display: flex;
+		gap: toRem(20);
+		justify-content: space-between;
+		@media (max-width: $mobile) {
+			flex-direction: column-reverse;
+		}
+		&:not(:last-child) {
+			@include adaptiveValue('margin-bottom', 38, 20);
+		}
+	}
+	// .footer__column
+	&__column {
+		display: flex;
+		flex-direction: column;
+		@media (min-width: $mobile) {
+			flex: 0 1 toRem(500);
+		}
+		&:nth-of-type(2) {
+			@media (max-width: $mobile) {
+				flex-direction: column-reverse;
+			}
+		}
+	}
+	// .footer__logo
+	&__logo {
+	}
+	// .footer__copy
+	&__copy {
+	}
+}
+
+.copy-footer {
+	background: var(--primary, #2947a9);
+	// .copy-footer__container
+	&__container {
+		@include adaptiveValue('padding-block', 25, 15);
+		color: #fff;
+		span {
+			white-space: nowrap;
+		}
+	}
+}

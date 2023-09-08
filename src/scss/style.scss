@@ -1,0 +1,537 @@
+@use 'sass:math';
+
+// Підключення міксинів ===========================================================================================================================================================================================================================================================================
+@import 'base/mixins';
+
+// Підключення шрифтів ===========================================================================================================================================================================================================================================================================
+//&display=swap - додати при підключенні через плагін
+@import url('https://fonts.googleapis.com/css?family=Work+Sans:regular,500,600,700,800&display=swap');
+// Підключити, якщо є локальні файли шрифтів
+// @import 'fonts/fonts';
+
+// Підключення іконкових шрифтів ==============================================================================================================================================================================================================================================================================
+// Підключити, якщо є файл іконкового шрифту
+//@import "fonts/icons";
+
+// ============================================================================================================================================================================================================================================================================================================================================================================================
+// Налаштування шаблону ============================================================================================================================================================================================================================================================================================================================================================================================
+// ============================================================================================================================================================================================================================================================================================================================================================================================
+
+// За замовчуванням шрифт ==============================================================================================================================================================================================================================================================================
+$fontFamily: 'Work Sans';
+$fontSize: toRem(16); // де 14(px) - розмір шрифту за замовчуванням з макету
+
+// Основні кольори
+$mainColor: #000; // Колір шрифту за замовчуванням
+
+// Палітра кольорів
+@import 'base/colors-palette';
+
+// Налаштування адаптивної сітки ===============================================================================================================================================================================================================================================================================================
+
+// Мінімальна ширина сторінки
+$minWidth: 280;
+// Ширина полотна (макету)
+$maxWidth: 1440;
+// Ширина обмежуючого контейнера (0 = немає обмеження)
+$maxWidthContainer: 1216;
+$maxWidthContainerSmall: 1020;
+// Загальний відступ у контейнера
+// (30 = по 15px ліворуч і праворуч, 0 = немає відступу)
+$containerPadding: 30;
+
+// Ширина спрацьовування першого брейкпоінту
+$containerWidth: $maxWidthContainer + $containerPadding;
+$containerWidthSmall: $maxWidthContainerSmall + $containerPadding;
+
+// Брейк-поїнти
+$pc: em(
+	$containerWidth
+); // ПК, ноутбуки, деякі планшети у горизонтальному положенні
+$tablet: em(991.98); // Планшети, деякі телефони в горизонтальному положенні
+$mobile: em(767.98); // Телефони L
+$mobileSmall: em(479.98); // Телефони S
+
+// Тип адаптива:
+// 1 = чуйність (у контейнера немає брейкпоінтів),
+// 2 = по брейк-поїнт (контейнер змінює свою ширину по брейк-поїнт)
+$responsiveType: 1;
+
+// ============================================================================================================================================================================================================================================================================================================================================================================================
+// ============================================================================================================================================================================================================================================================================================================================================================================================
+
+// Обнулення ============================================================================================================================================================================================== =============================================================================================== ===============================================================================================
+@import 'base/null';
+
+html {
+	scroll-behavior: smooth;
+}
+
+// Стилі тега BODY ============================================================================================================================================================================================================================================================================================================================================================================================
+body {
+	// Скролл заблоковано
+	.lock & {
+		overflow: hidden;
+		touch-action: none;
+		overscroll-behavior: none;
+	}
+	// Сайт завантажений
+	.loaded & {
+	}
+}
+// Оболонка wrapper ============================================================================================================================================================================================================================================================================================================================================================================================================================================
+.wrapper {
+	min-height: 100%;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	@supports (overflow: clip) {
+		overflow: clip;
+	}
+	// Притискаємо footer
+	> main {
+		flex: 1 1 auto;
+	}
+	// Фікс для слайдерів
+	> * {
+		min-width: 0;
+	}
+}
+// Обмежуючий контейнер ======================================================================================================================================================================================================================
+/*
+(i) Стилі будуть застосовуватись до
+всіх класів, що містять *__container
+Наприклад header__container, main__container і т.п.
+Сніппет (HTML): cnt
+*/
+@if ($responsiveType==1) {
+	// Чуйна
+	[class*='__container'] {
+		@if ($maxWidthContainer>0) {
+			max-width: toRem($containerWidth);
+			margin: 0 auto;
+		}
+		@if ($containerPadding>0) {
+			@if ($maxWidthContainer>0) {
+				padding: 0 toRem(math.div($containerPadding, 2));
+			} @else {
+				@include adaptiveValue(
+					'padding-left',
+					math.div($containerPadding, 2),
+					15
+				);
+				@include adaptiveValue(
+					'padding-right',
+					math.div($containerPadding, 2),
+					15
+				);
+			}
+		}
+	}
+	[class*='__container-small'] {
+		@if ($maxWidthContainerSmall>0) {
+			max-width: toRem($containerWidthSmall);
+			margin: 0 auto;
+		}
+		@if ($containerPadding>0) {
+			@if ($maxWidthContainerSmall>0) {
+				padding: 0 toRem(math.div($containerPadding, 2));
+			} @else {
+				@include adaptiveValue(
+					'padding-left',
+					math.div($containerPadding, 2),
+					15
+				);
+				@include adaptiveValue(
+					'padding-right',
+					math.div($containerPadding, 2),
+					15
+				);
+			}
+		}
+	}
+} @else {
+	// Брейк-поїнтами
+	[class*='__container'] {
+		margin: 0 auto;
+		@if ($maxWidthContainer>0) {
+			max-width: toRem($containerWidth);
+		} @else {
+			@if ($containerPadding>0) {
+				padding: 0 toRem(math.div($containerPadding, 2));
+			}
+		}
+		@media (max-width: $pc) {
+			max-width: toRem(970);
+		}
+		@media (max-width: $tablet) {
+			max-width: toRem(750);
+		}
+		@media (max-width: $mobile) {
+			max-width: none;
+			@if ($containerPadding>0 and $maxWidthContainer>0) {
+				padding: 0 toRem(math.div($containerPadding, 2));
+			}
+		}
+	}
+}
+
+// Підключення базових стилів, шаблонів (заготівель) та допоміжних класів
+// Для підключення/вимкнення конкретних стилів дивись base.scss
+@import 'base';
+
+// Підключення стилів загальних елементів проекту
+@import 'common';
+
+// Підключення стилів окремих блоків
+@import 'header';
+@import 'footer';
+
+// Hero ========================================================================================================================================================
+
+.hero {
+	padding-top: toRem(80);
+	height: 100vh;
+	min-height: toRem(500);
+
+	display: flex;
+	// .hero__container
+	&__container {
+	}
+	// .hero__title
+	&__title {
+		font-size: toRem(50);
+	}
+	// .hero__content
+	&__content {
+		align-self: flex-end;
+	}
+}
+
+.hero-slider {
+	&__slide {
+		position: relative;
+		&::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: linear-gradient(
+				90deg,
+				rgba(255, 255, 255, 0.9) 16.58%,
+				rgba(255, 255, 255, 0) 77.17%
+			);
+			@media (max-width: $mobile) {
+				background: linear-gradient(
+					180deg,
+					rgba(255, 255, 255, 0.9) 16.58%,
+					rgba(255, 255, 255, 0) 77.17%
+				);
+			}
+		}
+		img {
+			width: 100%;
+			height: inherit;
+			object-fit: cover;
+		}
+	}
+	&__container {
+		position: absolute;
+		display: flex;
+		top: 0;
+		left: 50%;
+		transform: translate(-50%, 0);
+		width: 100%;
+		height: inherit;
+	}
+	&__title {
+		@include adaptiveValue('font-size', 72, 36);
+		font-weight: 600;
+		max-width: toRem(600);
+		@media (min-width: $mobile) {
+			align-self: center;
+		}
+		@media (max-width: $mobile) {
+			max-width: 100%;
+			padding-top: toRem(60);
+			text-align: center;
+		}
+	}
+}
+
+// Reputation ========================================================================================================================================================
+
+.reputation {
+	// .reputation__container
+	&__container-small {
+		@include adaptiveValue('padding-top', 60, 30);
+		@include adaptiveValue('padding-bottom', 80, 15);
+	}
+	// .reputation__title
+	&__title {
+		@extend %titleanimation;
+		&:not(:last-child) {
+			@include adaptiveValue('margin-bottom', 50, 20);
+		}
+	}
+	// .reputation__items
+	&__items {
+		display: flex;
+		flex-wrap: wrap;
+		@include adaptiveValue('column-gap', 60, 20);
+		row-gap: toRem(15);
+	}
+}
+// About-Us ========================================================================================================================================================
+.about-us {
+	@include adaptiveValue('padding-top', 74, 15);
+	@include adaptiveValue('padding-bottom', 200, 15);
+	// .about-us__container
+	&__container {
+		display: flex;
+		position: relative;
+		@media (max-width: $mobile) {
+			flex-direction: column-reverse;
+		}
+		@media (min-width: $mobile) {
+			height: toRem(669);
+		}
+	}
+	// .about-us__img-ibg
+	&__img-ibg {
+		opacity: 0;
+		flex: 0 1 percent(902, 1216);
+		box-shadow: var(--shadow-1);
+		@media (min-width: $mobile) {
+			@include adaptiveValue('margin-right', -176, -50);
+		}
+		@media (max-width: $mobile) {
+			flex: 0 1 auto;
+			@include adaptiveValue('flex-basis', 350, 200);
+		}
+		._in-view & {
+			transition: all 0.3s ease 0s;
+			opacity: 1;
+		}
+	}
+	// .about-us__content
+	&__content {
+		top: toRem(20);
+		opacity: 0;
+		position: relative;
+		align-self: center;
+		@include adaptiveValue('padding', 50, 20);
+		flex: 2 1 percent(488, 1216);
+		right: 0;
+		border-radius: 2px;
+		background: var(--primary, #2947a9);
+		box-shadow: var(--shadow-1);
+		._in-view & {
+			transition: all 0.3s ease 0.2s;
+			opacity: 1;
+			top: 0;
+		}
+	}
+	// .about-us__title
+	&__title {
+		text-align: left;
+		&:not(:last-child) {
+			@include adaptiveValue('margin-bottom', 37, 20);
+		}
+	}
+	// .about-us__text
+	&__text {
+		@include adaptiveValue('font-size', 20, 18);
+		color: var(--neutral-white);
+		p {
+			&:not(:last-child) {
+				margin-bottom: toRem(20);
+			}
+		}
+		&:not(:last-child) {
+			@include adaptiveValue('margin-bottom', 74, 25);
+		}
+	}
+	// .about-us__btn
+	&__btn {
+		color: var(--primary);
+	}
+}
+// Services ========================================================================================================================================================
+
+.services {
+	scroll-margin-top: toRem(80);
+	background: var(--neutral-50, #f6f8f7);
+	// .services__container
+	&__container-small {
+		@include adaptiveValue('padding-top', 44, 30);
+		@include adaptiveValue('padding-bottom', 76, 15);
+	}
+	// .services__title
+	&__title {
+		@extend %titleanimation;
+		&:not(:last-child) {
+			@include adaptiveValue('margin-bottom', 50, 20);
+		}
+	}
+	// .services__items
+	&__items {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(toRem(200), 1fr));
+		grid-auto-flow: row;
+		@include adaptiveValue('column-gap', 100, 20);
+		row-gap: toRem(30);
+	}
+}
+// Statistics ========================================================================================================================================================
+
+.statistics {
+	// .statistics__container
+	&__container {
+		@include adaptiveValue('padding-top', 120, 15);
+		@include adaptiveValue('padding-bottom', 57, 15);
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		column-gap: toRem(15);
+		@media (max-width: $mobile) {
+			row-gap: toRem(20);
+			flex-direction: column-reverse;
+		}
+	}
+	// .statistics__items
+	&__items {
+		display: flex;
+		flex-direction: column;
+		@media (min-width: $mobile) {
+			padding: toRem(50);
+			flex: 0 1 toRem(600);
+			margin: 0 auto;
+		}
+		@media (max-width: $mobile) {
+			width: 100%;
+		}
+	}
+	// .statistics__cta
+	&__cta {
+	}
+}
+.cta-statistics {
+	position: relative;
+	top: toRem(20);
+	opacity: 0;
+	@media (min-width: $mobile) {
+		._in-view & {
+			transition: all 0.3s ease 0.2s;
+		}
+	}
+	@media (max-width: $mobile) {
+		._in-view & {
+			transition: all 0.3s ease 0s;
+		}
+	}
+	._in-view & {
+		opacity: 1;
+		top: 0;
+	}
+	@media (min-width: $mobile) {
+		flex: 0 1 toRem(360);
+	}
+	// .cta-statistics__title
+	&__title {
+		color: var(--primary, #2947a9);
+		@include adaptiveValue('font-size', 60, 30);
+		font-weight: 700;
+		line-height: normal;
+		&:not(:last-child) {
+			@include adaptiveValue('margin-bottom', 40, 20);
+		}
+	}
+	// .cta-statistics__text
+	&__text {
+		color: var(--neutral-600, #525b7a);
+		font-size: 20px;
+		line-height: normal;
+		&:not(:last-child) {
+			@include adaptiveValue('margin-bottom', 40, 20);
+		}
+	}
+	// .cta-statistics__btn
+	&__btn {
+	}
+}
+// Cta ========================================================================================================================================================
+.cta {
+	margin-top: toRem(15);
+	margin-bottom: toRem(15);
+	background: linear-gradient(
+			0deg,
+			rgba(0, 0, 0, 0.7) 0%,
+			rgba(0, 0, 0, 0.7) 100%
+		),
+		url('./../assets/imgages/cta/cta-bg.jpg') no-repeat center / cover;
+	// .cta__container
+	&__container {
+		@include adaptiveValue('padding-block', 100, 15);
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: toRem(20);
+		@media (max-width: $mobile) {
+			flex-direction: column;
+		}
+	}
+	// .cta__content
+	&__content {
+		width: 100%;
+		color: #fff;
+	}
+	// .cta__title
+	&__title {
+		text-align: left;
+		&:not(:last-child) {
+			@include adaptiveValue('margin-bottom', 30, 15);
+		}
+	}
+	// .cta__text
+	&__text {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: toRem(5);
+		@include adaptiveValue('font-size', 24, 18);
+	}
+	// .cta__btn
+	&__btn {
+		flex-shrink: 0;
+	}
+}
+
+// Projects ========================================================================================================================================================
+
+.projects {
+	// .projects__container
+	&__container {
+		@include adaptiveValue('padding-top', 88, 15);
+		@include adaptiveValue('padding-bottom', 138, 15);
+	}
+	// .projects__title
+	&__title {
+		text-align: left;
+		&:not(:last-child) {
+			@include adaptiveValue('margin-bottom', 40, 20);
+		}
+	}
+	// .projects__tabs
+	&__tabs {
+		display: flex;
+		justify-content: space-between;
+		column-gap: toRem(50);
+		@media (max-width: $mobile) {
+			row-gap: toRem(15);
+			flex-direction: column;
+		}
+	}
+}
