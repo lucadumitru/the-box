@@ -485,6 +485,7 @@ body {
 	}
 	// .cta__content
 	&__content {
+		@extend %titleanimation;
 		width: 100%;
 		color: #fff;
 	}
@@ -505,6 +506,7 @@ body {
 	}
 	// .cta__btn
 	&__btn {
+		@extend %bottomslideanimation;
 		flex-shrink: 0;
 	}
 }
@@ -532,6 +534,29 @@ body {
 		@media (max-width: $mobile) {
 			row-gap: toRem(15);
 			flex-direction: column;
+		}
+	}
+}
+// Contact ========================================================================================================================================================
+
+.contact {
+	scroll-margin-block-start: toRem(70);
+	background: var(--neutral-50, #f6f8f7);
+	@include adaptiveValue('padding-block', 60, 15);
+	// .contact__container
+	&__container {
+		max-width: toRem(600);
+	}
+	// .contact__title
+	&__title {
+		&:not(:last-child) {
+			@include adaptiveValue('margin-bottom', 20, 10);
+		}
+	}
+	// .contact__text
+	&__text {
+		&:not(:last-child) {
+			@include adaptiveValue('margin-bottom', 20, 10);
 		}
 	}
 }

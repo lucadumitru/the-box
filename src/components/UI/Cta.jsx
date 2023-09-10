@@ -1,8 +1,18 @@
 import React from 'react';
+import { useInView } from 'react-intersection-observer';
 
 const Cta = () => {
+	const { ref, inView, entry } = useInView({
+		threshold: 0.3,
+	});
+
+	if (inView) {
+		const ctaSection = document.querySelector('.cta');
+		ctaSection.classList.add('_in-view');
+	}
+
 	return (
-		<section className="cta">
+		<section ref={ref} className="cta">
 			<div className="cta__container">
 				<div className="cta__content">
 					<div className="cta__title title">

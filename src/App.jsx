@@ -1,17 +1,19 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Form } from 'react-router-dom';
 
+// * Styles
 import './scss/style.scss';
-import Header from './components/Header/Header';
-import Hero from './components/Hero/Hero';
-import Footer from './components/Footer/Footer';
 
 // * Components
+import Header from './components/Header/Header';
+import Hero from './components/Hero/Hero';
 import Services from './components/Services/Services';
 import ServiceDisplay from './components/Services/ServiceDisplay';
 import Statistics from './components/Statistics/Statictics';
 import Cta from './components/UI/Cta';
 import ProjectDisplay from './components/Projects/ProjectDisplay';
+import Contact from './components/Contact/Contact';
+import Footer from './components/Footer/Footer';
 
 // * Dates
 import { services } from './dates/services';
@@ -57,6 +59,7 @@ function App() {
 						element={<ProjectDisplay projects={projects} />}
 					></Route>
 				</Routes>
+				<Contact></Contact>
 				<Footer></Footer>
 			</Router>
 		</>

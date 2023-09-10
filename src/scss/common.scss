@@ -17,6 +17,19 @@
 	}
 }
 
+.text {
+	color: var(--neutral-800, #292e3d);
+	text-align: center;
+	@include adaptiveValue('font-size', 20, 16);
+	line-height: normal;
+	p {
+		margin-bottom: toRem(10);
+	}
+	p + p {
+		margin-bottom: toRem(0);
+	}
+}
+
 .btn {
 	height: toRem(53);
 	display: inline-flex;
@@ -523,7 +536,8 @@
 }
 // Project-Display ========================================================================================================================================================
 .project {
-	padding-top: toRem(100);
+	margin-top: toRem(100);
+	@include adaptiveValue('margin-bottom', 50, 015);
 	// .project__container
 	&__container {
 		display: flex;
@@ -560,5 +574,87 @@
 	}
 	// .content-project__description
 	&__description {
+	}
+}
+// Form ========================================================================================================================================================
+.form {
+	display: grid;
+	@include adaptiveValue('row-gap', 20, 10);
+	// .form__inputs
+	&__inputs {
+		display: grid;
+		@include adaptiveValue('column-gap', 30, 15);
+		@include adaptiveValue('row-gap', 20, 10);
+		@media (min-width: $mobile) {
+			grid-template-columns: repeat(2, 1fr);
+			grid-auto-flow: row;
+		}
+	}
+	// .form__input
+	&__input,
+	&__message {
+		width: 100%;
+		border-radius: 4px;
+		border: 1px solid var(--neutral-100, #e0e3eb);
+		background: #fff;
+		padding: 10px 8px;
+		&:focus {
+			&::placeholder {
+				transition: all 0.3s ease 0s;
+				opacity: 0;
+			}
+		}
+	}
+
+	// .form__message
+	&__message {
+		width: 100%;
+	}
+	// .form__advert
+	&__advert {
+		color: var(--neutral-500, #667299);
+		line-height: normal;
+		span {
+			color: #c40303;
+		}
+	}
+	// .form__button
+	&__button {
+		width: percent(271, 600);
+		justify-self: center;
+		@media (max-width: $mobile) {
+			width: 100%;
+		}
+	}
+}
+// Dialog ========================================================================================================================================================
+.dialog {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: fixed !important;
+	top: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.22);
+	z-index: 100;
+	width: 100%;
+	height: 100%;
+	// .dialog__body
+	&__body {
+		border-radius: toRem(10);
+		padding: toRem(30);
+		position: relative;
+		text-align: center;
+		background-color: #fff;
+		width: 30%;
+	}
+	// .dialog__close
+	&__close {
+		position: absolute;
+		top: toRem(5);
+		right: toRem(5);
+	}
+	// .dialog__text
+	&__text {
 	}
 }
